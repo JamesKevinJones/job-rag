@@ -1,3 +1,4 @@
+import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { getIndexStats, pruneStaleJobs, upsertJobs } from "@/lib/rag/store";
 import { scrapeAllJobs } from "@/lib/scraper";
@@ -5,26 +6,31 @@ import { scrapeAllJobs } from "@/lib/scraper";
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
+function authorizeIngest(req: Request, secret: string): boolean {
+  const auth = req.headers.get("authorization") || "";
+  const expected = `Bearer ${secret}`;
+  const a = Buffer.from(auth);
+  const b = Buffer.from(expected);
+  if (a.length !== b.length) return false;
+  return timingSafeEqual(a, b);
+}
+
 /**
- * GET — index stats.
- * POST — optional protected mini-ingest (set INGEST_SECRET).
- * Prefer `npm run ingest` locally for full corpus refresh.
+ * GET — index stats (no secrets).
+ * POST — protected mini-ingest (requires INGEST_SECRET).
  */
 export async function GET() {
   try {
     const stats = await getIndexStats();
     return NextResponse.json({
       ok: true,
-      ...stats,
-      ingestHint:
-        "Run `npm run ingest` locally, or POST /api/ingest with Bearer INGEST_SECRET.",
+      count: stats.count,
+      newestLastSeen: stats.newestLastSeen,
+      oldestLastSeen: stats.oldestLastSeen,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      {
-        ok: false,
-        error: error instanceof Error ? error.message : "Unknown error",
-      },
+      { ok: false, error: "Failed to read index stats" },
       { status: 500 },
     );
   }
@@ -36,15 +42,13 @@ export async function POST(req: Request) {
     return NextResponse.json(
       {
         ok: false,
-        error:
-          "Bulk ingest via API is disabled. Set INGEST_SECRET or use `npm run ingest`.",
+        error: "Bulk ingest via API is disabled.",
       },
       { status: 405 },
     );
   }
 
-  const auth = req.headers.get("authorization") || "";
-  if (auth !== `Bearer ${secret}`) {
+  if (!authorizeIngest(req, secret)) {
     return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
 
@@ -54,7 +58,7 @@ export async function POST(req: Request) {
 
   if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
     return NextResponse.json(
-      { ok: false, error: "GOOGLE_GENERATIVE_AI_API_KEY is not configured" },
+      { ok: false, error: "Server is missing required configuration" },
       { status: 500 },
     );
   }
@@ -72,15 +76,11 @@ export async function POST(req: Request) {
       ok: true,
       upserted,
       pruned,
-      ...stats,
-      note: "Serverless filesystem is ephemeral on Vercel — prefer CLI ingest + commit for durable index updates.",
+      count: stats.count,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      {
-        ok: false,
-        error: error instanceof Error ? error.message : "Ingest failed",
-      },
+      { ok: false, error: "Ingest failed" },
       { status: 500 },
     );
   }

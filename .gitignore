@@ -33,6 +33,11 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 !.env.local.example
+*.pem
+*.key
+*.tmp
+.vercel-*-key*
+.vercel-gemini-key.tmp
 
 # scrape cache (keep committed portable index)
 /data/raw/
@@ -47,8 +52,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.vercel
 # debug artifacts
 debug-*.json
 debug-*.txt
 debug-*.log
+.debug*
