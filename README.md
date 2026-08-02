@@ -6,7 +6,7 @@ Natural-language job search over scraped remote listings. Bulk ingest runs as a 
 
 - Next.js (App Router) + TypeScript + Tailwind
 - Cheerio HTML scrape + RemoteOK / Remotive public APIs
-- Gemini (`gemini-embedding-001` + `gemini-2.0-flash`) via `@ai-sdk/google`
+- Gemini (`gemini-embedding-001` + `gemini-flash-latest`) via `@ai-sdk/google`
 - Portable JSON vector index (`data/jobs-index.json`) — works on Vercel
 - Hybrid metadata prefilter → vector (or keyword) ranking
 - Vercel AI SDK tool calling → `JobCard` UI
