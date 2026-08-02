@@ -6,11 +6,14 @@ import {
 } from "../src/lib/rag/store";
 
 async function main() {
-  if (!process.env.OPENAI_API_KEY) {
+  if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY && !process.env.GEMINI_API_KEY) {
     console.error(
-      "Missing OPENAI_API_KEY. Copy .env.local.example to .env.local.",
+      "Missing GOOGLE_GENERATIVE_AI_API_KEY. Copy .env.local.example to .env.local.",
     );
     process.exit(1);
+  }
+  if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY && process.env.GEMINI_API_KEY) {
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY = process.env.GEMINI_API_KEY;
   }
 
   console.log("Scraping RemoteOK, Remotive, and HTML listings…");

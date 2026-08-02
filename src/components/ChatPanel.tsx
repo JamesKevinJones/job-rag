@@ -25,6 +25,11 @@ export function ChatPanel({ initialStats }: { initialStats: IndexStats }) {
 
   const { messages, sendMessage, status, error } = useChat({
     transport,
+    onError: (err) => {
+      // #region agent log
+      fetch('http://127.0.0.1:7447/ingest/e326b82c-57dc-4752-9d3a-65f6f21a8811',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1748e9'},body:JSON.stringify({sessionId:'1748e9',runId:'pre-fix',hypothesisId:'C',location:'ChatPanel.tsx:useChat:onError',message:'client chat error',data:{errorMessage:err?.message??String(err)},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+    },
   });
 
   const busy = status === "submitted" || status === "streaming";

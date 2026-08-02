@@ -6,7 +6,7 @@ Natural-language job search over scraped remote listings. Bulk ingest runs as a 
 
 - Next.js (App Router) + TypeScript + Tailwind
 - Cheerio HTML scrape + RemoteOK / Remotive public APIs
-- OpenAI embeddings (`text-embedding-3-small`) + `gpt-4o-mini`
+- Gemini (`gemini-embedding-001` + `gemini-2.0-flash`) via `@ai-sdk/google`
 - Portable JSON vector index (`data/jobs-index.json`) — works on Vercel
 - Hybrid metadata prefilter → vector (or keyword) ranking
 - Vercel AI SDK tool calling → `JobCard` UI
@@ -16,16 +16,16 @@ Natural-language job search over scraped remote listings. Bulk ingest runs as a 
 ```bash
 cd job-rag
 cp .env.local.example .env.local
-# put your OPENAI_API_KEY in .env.local
+# put your GOOGLE_GENERATIVE_AI_API_KEY in .env.local
 npm install
 npm run seed    # scrape jobs into data/jobs-index.json
-npm run ingest  # optional: attach OpenAI embeddings + prune >48h
+npm run ingest  # optional: attach Gemini embeddings + prune >48h
 npm run dev
 ```
 
 ## Deploy (Vercel)
 
-1. Set `OPENAI_API_KEY` in the Vercel project environment variables.
+1. Set `GOOGLE_GENERATIVE_AI_API_KEY` in the Vercel project environment variables.
 2. Optionally set `INGEST_SECRET` to enable protected re-seed from `/api/ingest`.
 3. Deploy from GitHub (`JamesKevinJones/job-rag`).
 

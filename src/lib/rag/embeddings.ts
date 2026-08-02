@@ -1,12 +1,19 @@
 import { embed, embedMany } from "ai";
-import { openai } from "@ai-sdk/openai";
+import { google } from "@ai-sdk/google";
 
-const MODEL = openai.embedding("text-embedding-3-small");
+const MODEL = google.embedding("gemini-embedding-001");
+
+function ensureGeminiEnv() {
+  if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY && process.env.GEMINI_API_KEY) {
+    process.env.GOOGLE_GENERATIVE_AI_API_KEY = process.env.GEMINI_API_KEY;
+  }
+}
 
 export async function embedTexts(texts: string[]): Promise<number[][]> {
+  ensureGeminiEnv();
   if (texts.length === 0) return [];
 
-  const batchSize = 64;
+  const batchSize = 32;
   const vectors: number[][] = [];
 
   for (let i = 0; i < texts.length; i += batchSize) {
@@ -22,6 +29,7 @@ export async function embedTexts(texts: string[]): Promise<number[][]> {
 }
 
 export async function embedQuery(text: string): Promise<number[]> {
+  ensureGeminiEnv();
   const { embedding } = await embed({
     model: MODEL,
     value: text,
