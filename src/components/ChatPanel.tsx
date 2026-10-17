@@ -117,6 +117,15 @@ export function ChatPanel({ initialStats }: { initialStats: IndexStats }) {
   );
 }
 
+// The prompt asks for plain text, but the model sometimes slips into Markdown.
+// Strip the common markers instead of rendering them; React still escapes the result.
+function toPlainText(text: string): string {
+  return text
+    .replace(/\*\*/g, "")
+    .replace(/^#{1,6}\s+/gm, "")
+    .replace(/^(\s*)[*-]\s+/gm, "$1• ");
+}
+
 function MessageBubble({ message }: { message: UIMessage }) {
   const isUser = message.role === "user";
 
@@ -142,7 +151,7 @@ function MessageBubble({ message }: { message: UIMessage }) {
                     : "whitespace-pre-wrap text-[var(--ink-soft)]"
                 }
               >
-                {part.text}
+                {isUser ? part.text : toPlainText(part.text)}
               </p>
             );
           }

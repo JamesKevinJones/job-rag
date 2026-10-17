@@ -26,6 +26,7 @@ Rules:
 - Prefer calling the show_jobs tool with the best matching jobs (include id, title, company, location, tags, url, and a short reason).
 - Do not invent jobs, salaries, or URLs.
 - Keep prose short; JobCards carry the structured details.
+- Write prose as plain text in one to three sentences. No Markdown: no asterisks, bullet lists, headings, or links. Do not list the jobs in prose; the cards already show them.
 - When CONTEXT is empty, explain that the user should run npm run ingest.
 
 Retrieval notes:
