@@ -26,6 +26,13 @@
   pre-existing issues in untouched files (`src/lib/scraper/html.ts:75`
   prefer-const error, two unused-var warnings in `src/lib/rag/store.ts`).
 
+**2026-10-18 re-check:** 2 more real replies, both plain text (3 in total
+since the fix, none with Markdown). The quota ran out again after that. The
+Gemini free-tier day resets at 00:00 UTC (05:30 IST), not midnight Pacific.
+Only about 4 of the day's 20 requests came from this check, so the live demo
+probably shares the Google project and uses the rest. Not pushed: 3 samples is
+too few against a 1-in-8 failure rate.
+
 **Open:**
 
 - The project has no `docs/VERIFY.md` and no `/security-review` command. The
