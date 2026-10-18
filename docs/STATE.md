@@ -1,5 +1,21 @@
 # State
 
+## 2026-10-18: plain-text answer fix shipped
+
+`9e1d5bb` is live: pushed to `main` (fast-forward, `79fb0f2`) at Kevin's go-ahead, and
+Vercel deployed it from the push in about a minute. Confirmed in the live chat bundle,
+which now contains `toPlainText`'s `#{1,6}` pattern; the bundle served before the push
+did not. Pushed with only 3 real samples because the `toPlainText` backstop strips `**`,
+headings and bullets whatever the prompt does; the prompt change is still under-sampled.
+Before push: `npx tsc --noEmit` and `npm run build` pass; the diff was security-reviewed
+by hand (still text-only React output, no new deps or network calls). A real answer
+could not be checked live after the deploy: the Gemini free-tier quota for the day was
+already spent ("An error occurred."). It resets at 05:30 IST.
+
+**Next step:** after the reset, run the suggested queries a few times on the live site
+to sample the prompt change, then retake the portfolio's JobMatch screenshot uncropped.
+Local `main` in the main checkout is still at `4a93a16`; `git pull` to catch up.
+
 ## 2026-10-17: answer text rendered raw Markdown
 
 **Changed (branch `fix/plain-text-answer`, not pushed):**
