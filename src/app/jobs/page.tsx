@@ -19,7 +19,7 @@ export default async function JobsPage() {
         <div>
           <p className="font-display text-3xl text-[var(--ink)]">Indexed jobs</p>
           <p className="mt-2 text-sm text-[var(--muted)]">
-            {jobs.length} roles currently in LanceDB
+            {jobs.length} roles currently in the index
           </p>
         </div>
         <Link

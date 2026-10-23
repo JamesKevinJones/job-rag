@@ -72,7 +72,7 @@ function parseWeWorkRemotely(html: string): JobListing[] {
     // Prefer structured children when present
     let company = anchor.find(".company").first().text().trim();
     let title = anchor.find(".title").first().text().trim();
-    let location =
+    const location =
       anchor.find(".region").first().text().trim() ||
       anchor.find(".location").first().text().trim() ||
       "Remote";
